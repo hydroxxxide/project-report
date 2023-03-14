@@ -1,5 +1,6 @@
 package com.example.projectreport.entity;
 
+import com.example.projectreport.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,7 @@ public class User {
     private String username;
     @Column
     private String password;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 }
