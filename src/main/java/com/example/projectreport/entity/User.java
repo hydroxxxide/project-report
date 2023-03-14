@@ -1,6 +1,6 @@
 package com.example.projectreport.entity;
 
-import com.example.projectreport.enums.UserStatus;
+import com.example.projectreport.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name ="users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
     private String email;
@@ -24,5 +24,5 @@ public class User {
     private String password;
     @Column
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+    private UserRole userRole;
 }

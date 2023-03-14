@@ -1,5 +1,6 @@
 package com.example.projectreport.entity;
 
+import com.example.projectreport.enums.ReportStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class Report {
     private String text;
     @OneToMany
     @JoinColumn(name = "report_id")
-
     List<Task> tasks = new ArrayList<>();
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ReportStatus reportStatus;
 }

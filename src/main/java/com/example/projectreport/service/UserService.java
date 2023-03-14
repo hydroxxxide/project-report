@@ -2,6 +2,7 @@ package com.example.projectreport.service;
 
 import com.example.projectreport.dto.UserDto;
 import com.example.projectreport.entity.User;
+import com.example.projectreport.enums.UserRole;
 import com.example.projectreport.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + id + "not found"));
     }
     public User createUser(User user){
+        user.setUserRole(UserRole.USER);
         return userRepository.save(user);
     }
     public User updateUserById(Long id, User user){
@@ -58,5 +60,8 @@ public class UserService {
     }
     public void deleteUserById(Long id){
         userRepository.deleteById(id);
+    }
+    public User login(String email, String password){
+        return userRepository.findByEmailAndPassword(email, password);
     }
 }
