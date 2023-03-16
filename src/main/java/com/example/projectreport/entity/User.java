@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,4 +27,10 @@ public class User {
     @Column
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    List<Report> reports = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    List<Task> tasks = new ArrayList<>();
 }

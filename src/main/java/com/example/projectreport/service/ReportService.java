@@ -1,6 +1,7 @@
 package com.example.projectreport.service;
 
 import com.example.projectreport.entity.Report;
+import com.example.projectreport.entity.Task;
 import com.example.projectreport.enums.ReportStatus;
 import com.example.projectreport.repository.ReportRepository;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Service
 public class ReportService {
     ReportRepository reportRepository;
+    TaskService taskService;
     public List<Report> getAllReports(){
         return reportRepository.findAll();
     }
@@ -38,6 +40,14 @@ public class ReportService {
         Report report = getReportById(id);
         report.setReportStatus(reportStatus);
         return reportRepository.save(report);
+    }
+    public Report generateTaskReport(Long id, Report report) {
+        List<Task> tasks = taskService.findAllTasksByUserId(id);
+        int totalTasks = tasks.size();
+        report.setTasks(tasks);
+        report.setTotalTasks(totalTasks);
+        createReport(report);
+        return report;
     }
 
 }

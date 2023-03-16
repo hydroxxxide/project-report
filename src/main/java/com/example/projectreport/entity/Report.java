@@ -22,6 +22,8 @@ public class Report {
     private String title;
     @Column
     private String text;
+    @Column
+    private Integer totalTasks;
     @OneToMany
     @JoinColumn(name = "report_id")
     List<Task> tasks = new ArrayList<>();

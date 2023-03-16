@@ -5,7 +5,6 @@ import com.example.projectreport.enums.ReportStatus;
 import com.example.projectreport.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @AllArgsConstructor
@@ -36,5 +35,9 @@ public class ReportController {
     @PostMapping("/change-status/{id}")
     Report changeStatus(@PathVariable Long id, @RequestParam ReportStatus reportStatus){
         return reportService.changeReportStatus(id, reportStatus);
+    }
+    @GetMapping("/send/{id}")
+    Report sendReport(@PathVariable Long id, @RequestBody Report report){
+        return reportService.generateTaskReport(id, report);
     }
 }
