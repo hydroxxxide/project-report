@@ -5,10 +5,22 @@ import com.example.projectreport.entity.Task;
 import com.example.projectreport.enums.ReportStatus;
 import com.example.projectreport.repository.ReportRepository;
 import lombok.AllArgsConstructor;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @AllArgsConstructor
@@ -52,6 +64,60 @@ public class ReportService {
     }
     public List<Report> getLastWeekReport(LocalDate date){
         return reportRepository.getCreatedDateReport(date);
+    }
+    public ResponseEntity<byte[]> exportToExcel(List<Report> reports) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Reports");
+
+        // Задаем стиль заголовков
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        headerStyle.setFont(font);
+
+        // Создаем заголовки столбцов
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("Title");
+        headerRow.createCell(2).setCellValue("Description");
+
+
+        // Устанавливаем стиль заголовков
+        for (Cell cell : headerRow) {
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Заполняем таблицу данными
+        int rowNum = 1;
+        for (Report report : reports) {
+            Row row = sheet.createRow(rowNum++);
+
+            row.createCell(0).setCellValue(report.getId());
+            row.createCell(1).setCellValue(report.getTitle());
+            row.createCell(2).setCellValue(report.getText());
+
+        }
+
+        // Авторазмер столбцов
+        for (int i = 0; i < 5; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Переводим книгу Excel в массив байтов
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+
+
+        String fileName = "report on tasks " +
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        // Формируем ответ с файлом Excel
+        byte[] bytes = outputStream.toByteArray();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", fileName + ".xlsx");
+        headers.setContentLength(bytes.length);
+        return new ResponseEntity<>(bytes, headers, 200);
     }
 
 }

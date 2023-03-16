@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-//    @Query(value = "select * from users WHERE username = ?",nativeQuery = true )
-//    User findByUserName(String username);
+    @Query(value = "select * from users WHERE email = ? and password = ?",nativeQuery = true )
+    User findByUsername(String username);
     @Query(value = "select * from users WHERE email = ? and password = ?",nativeQuery = true )
     User findByEmailAndPassword(String email, String password);
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Service
 public class UserService {
+
     UserRepository userRepository;
 
 //    @Override
@@ -30,7 +31,6 @@ public class UserService {
 //        return userRepository.findByEmail(email) != null;
 //    }
 
-    //для теста Хашемчика
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -51,6 +51,7 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
     public User login(String email, String password){
         return userRepository.findByEmailAndPassword(email, password);
     }
