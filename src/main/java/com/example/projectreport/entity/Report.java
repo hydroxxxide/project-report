@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class Report {
     private String text;
     @Column
     private Integer totalTasks;
+    @Column
+    private LocalDate createdDate;
     @OneToMany
     @JoinColumn(name = "report_id")
     List<Task> tasks = new ArrayList<>();

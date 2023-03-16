@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -48,6 +49,9 @@ public class ReportService {
         report.setTotalTasks(totalTasks);
         createReport(report);
         return report;
+    }
+    public List<Report> getLastWeekReport(LocalDate date){
+        return reportRepository.getCreatedDateReport(date);
     }
 
 }

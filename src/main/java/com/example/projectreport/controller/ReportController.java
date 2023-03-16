@@ -5,6 +5,8 @@ import com.example.projectreport.enums.ReportStatus;
 import com.example.projectreport.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -39,5 +41,11 @@ public class ReportController {
     @GetMapping("/send/{id}")
     Report sendReport(@PathVariable Long id, @RequestBody Report report){
         return reportService.generateTaskReport(id, report);
+    }
+    @GetMapping("/last-week-report")
+    List <Report> sendLastWeekReport(){
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(7);
+        return reportService.getLastWeekReport(lastWeek);
     }
 }
