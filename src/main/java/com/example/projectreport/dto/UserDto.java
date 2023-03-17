@@ -11,14 +11,4 @@ public class UserDto {
     private String password;
     private UserRole userRole;
 
-    public UserDto(Long id, String email, String username, String password, UserRole userRole) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.userRole = userRole;
-    }
-
-    public UserDto() {
-    }
 }

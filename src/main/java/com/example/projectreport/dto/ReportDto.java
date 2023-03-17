@@ -1,37 +1,27 @@
-package com.example.projectreport.entity;
+package com.example.projectreport.dto;
 
+import com.example.projectreport.entity.Task;
 import com.example.projectreport.enums.ReportStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "reports")
-public class Report {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ReportDto {
     private Long id;
-    @Column
     private String title;
-    @Column
     private String text;
-    @Column
     private Integer totalTasks;
-    @Column
     private LocalDate createdDate;
-    @Column
     @OneToMany
     @JoinColumn(name = "report_id")
     List<Task> tasks = new ArrayList<>();
-    @Column
     @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 }
