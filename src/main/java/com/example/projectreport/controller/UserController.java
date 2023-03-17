@@ -3,13 +3,21 @@ package com.example.projectreport.controller;
 import com.example.projectreport.entity.User;
 import com.example.projectreport.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
     UserService userService;
+
+    @RequestMapping(value = {"/dashboard"}, method = RequestMethod.GET)
+    public String homePage(){
+        return "user/dashboard";
+    }
+
+
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
