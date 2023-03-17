@@ -1,39 +1,62 @@
 package com.example.projectreport.controller;
 
+import com.example.projectreport.dto.UserDto;
+import com.example.projectreport.entity.Task;
 import com.example.projectreport.entity.User;
 import com.example.projectreport.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     UserService userService;
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
 
     @PostMapping("/create")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public UserDto createUser(@RequestBody UserDto userDto) {
+        User user = mapToUser(userDto);
+        User createdTask = userService.createUser(user);
+        return mapToUserDto(createdTask);
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return mapToUserDto(user);
+    }
 
     @PutMapping("/update/{id}")
-    public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        User user = userService.getUserById(id);
+        User updatedUser = userService.updateUser(id, user);
+        return mapToUserDto(updatedUser);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
-
-    @PostMapping("/login")
-    public User login(@RequestParam String email, @RequestParam String password){
-        return userService.login(email, password);
+    private User mapToUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setUserRole(userDto.getUserRole());
+        return user;
     }
-
+    private UserDto mapToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+        userDto.setUserRole(user.getUserRole());
+        return userDto;
+    }
 }
