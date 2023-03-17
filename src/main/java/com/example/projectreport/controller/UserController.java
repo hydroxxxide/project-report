@@ -1,11 +1,9 @@
 package com.example.projectreport.controller;
 
 import com.example.projectreport.dto.UserDto;
-import com.example.projectreport.entity.Task;
 import com.example.projectreport.entity.User;
 import com.example.projectreport.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
