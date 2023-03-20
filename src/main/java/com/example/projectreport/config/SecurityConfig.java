@@ -1,5 +1,6 @@
 package com.example.projectreport.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,46 +8,44 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-
-import javax.sql.DataSource;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.inMemoryAuthentication()
-                .withUser("User")
-                .password("user")
-                .authorities("ROLE_User")
-                .and()
-                .withUser("Admin")
-                .password("admin")
-                .authorities("ROLE_ADMIN");
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
+
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
-        http.authorizeRequests()
-                .antMatchers("/all").hasAnyRole("USER","ADMIN")
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/all").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/update/{id}").hasRole("ADMIN")
-                .antMatchers("/delete/{id}").hasRole("ADMIN")
-                .antMatchers("/{id}").hasAnyRole("USER","ADMIN")
+                .antMatchers("/user/delete/{id}").hasRole("ADMIN")
+                .antMatchers("/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user/save").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
     }
-    @Bean
-    public UserDetailsService users(DataSource dataSource){
-        return new JdbcUserDetailsManager(dataSource);
-    }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
